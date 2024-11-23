@@ -19,8 +19,8 @@ export default function LandingPage() {
           <Link className="text-xl font-medium hover:underline underline-offset-4" href="#">
             About
           </Link>
-          <Link className="text-xl font-medium hover:underline underline-offset-4" href="#">
-            Contact
+          <Link className="text-xl font-medium hover:underline underline-offset-4" href="login">
+            Login
           </Link>
         </nav>
       </header>

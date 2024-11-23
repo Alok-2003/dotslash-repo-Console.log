@@ -1,15 +1,40 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { auth } from "../../context/firebase"; // Ensure your Firebase config is properly imported
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { toast, Toaster } from "react-hot-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 const Page = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User logged in:", userCredential.user);
+      toast.success("Login successful!");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Invalid email or password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Left Section */}
       <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-emerald-700 text-white p-10">
         <h1 className="text-6xl font-bold mb-8">Welcome Back!</h1>
-        {/* <p className="text-lg text-center mb-4">
-          Enter your phone number and OTP to securely access your account.
-        </p> */}
         <DotLottieReact
           src="https://lottie.host/2cf086ab-daac-4fa9-b586-52738cb89a9d/1hYr1QxIOR.lottie"
           loop
@@ -20,20 +45,23 @@ const Page = () => {
 
       {/* Right Section */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10">
-        <form className="w-full max-w-md">
+        <Toaster toastOptions={{ duration: 4000 }} />
+        <form onSubmit={handleLogin} className="w-full max-w-md">
           <h2 className="text-3xl font-bold text-center mb-6">Login</h2>
 
           <div className="mb-4">
             <label
-              htmlFor="phone"
+              htmlFor="email"
               className="block text-gray-700 font-medium mb-2"
             >
-              Phone Number
+              Email
             </label>
             <input
-              type="text"
-              id="phone"
-              placeholder="Enter your phone number"
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -41,15 +69,17 @@ const Page = () => {
 
           <div className="mb-4">
             <label
-              htmlFor="otp"
+              htmlFor="password"
               className="block text-gray-700 font-medium mb-2"
             >
-              OTP
+              Password
             </label>
             <input
-              type="text"
-              id="otp"
-              placeholder="Enter your OTP"
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -58,9 +88,10 @@ const Page = () => {
           {/* Login Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           {/* Alternate Login Options */}

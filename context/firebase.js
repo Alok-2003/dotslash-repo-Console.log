@@ -1,58 +1,80 @@
+"use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
     getAuth,
     onAuthStateChanged,
-    signOut,
     GoogleAuthProvider,
-    signInWithPopup,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc } from "firebase/firestore";
-
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const FirebaseContext = createContext(null);
 
+// Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDmUIcm4kPoZF8YI307wzivjSWY3-mYuHk",
-    authDomain: "hotel-60204.firebaseapp.com",
-    projectId: "hotel-60204",
-    storageBucket: "hotel-60204.appspot.com",
-    messagingSenderId: "419924901635",
-    appId: "1:419924901635:web:25316be4232420aa62b336",
-    measurementId: "G-P1JCSDB7FD",
+    apiKey: "AIzaSyAMbXAQu7utw8dkZo-JtIfgUkhBjFd-ltA",
+    authDomain: "healthsync-17d27.firebaseapp.com",
+    projectId: "healthsync-17d27",
+    storageBucket: "healthsync-17d27.firebasestorage.app",
+    messagingSenderId: "249303912248",
+    appId: "1:249303912248:web:7e425fe3ea4121518fbbcd",
 };
 
-export const useFirebase = () => useContext(FirebaseContext); // Context hook ready
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
+export const useFirebase = () => useContext(FirebaseContext);
 
-export const FirebaseProvider = (props) => {
-
+export const FirebaseProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const navigate = useNavigate();
 
-    // console.log(user)
-
+    // Auth state listener
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) setUser(user);
-            else setUser(null);
-        })
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user || null);
+        });
+        return () => unsubscribe();
     }, []);
 
-    const isLoggedIn = user ? true : false;
+    const isLoggedIn = !!user;
 
-    console.log(user)
+    // Function to fetch and log data from a given collection
+    const fetchAndLogCollection = async (collectionName) => {
+        try {
+            const querySnapshot = await getDocs(collection(firestore, collectionName));
+            const data = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            console.log(`Data from collection ${collectionName}:`, data);
+            return data;
+        } catch (error) {
+            console.error(`Error fetching data from collection ${collectionName}:`, error);
+            throw error;
+        }
+    };
 
+    // Functions for specific collections
+    const listOfPatients = () => fetchAndLogCollection("Patients");
+    const listOfHospitals = () => fetchAndLogCollection("Hospitals");
+    const listOfDistricts = () => fetchAndLogCollection("Districts");
 
-
-    return <FirebaseContext.Provider value={{
-        isLoggedIn,
-    }} > {props.children} </FirebaseContext.Provider>
+    return (
+        <FirebaseContext.Provider
+            value={{
+                isLoggedIn,
+                user,
+                listOfPatients,
+                listOfHospitals,
+                listOfDistricts,
+            }}
+        >
+            {children}
+        </FirebaseContext.Provider>
+    );
 };

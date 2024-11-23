@@ -1,8 +1,70 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
+import { auth } from "../../context/firebase"; // Ensure this path is correct
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { toast, Toaster } from "react-hot-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const Page = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const router = useRouter(); // Initialize router
+  useEffect(() => {
+    setIsMounted(true); // Set mounted to true on client
+  }, []);
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    // Validate password
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Firebase Signup
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      console.log("User registered:", userCredential.user);
+      toast.success(`Welcome, ${fullName}! Your account was created.`);
+
+      // Redirect to CreateProfile page
+      router.push("/CreateProfile");
+    } catch (error) {
+      console.error("Signup error:", error);
+      const errorMessage = getFirebaseErrorMessage(error.code);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Firebase Error Message Handler
+  const getFirebaseErrorMessage = (errorCode) => {
+    const errorMessages = {
+      "auth/email-already-in-use": "Email already in use. Please try logging in.",
+      "auth/invalid-email": "Invalid email address format.",
+      "auth/weak-password": "Password is too weak. Try a stronger password.",
+      "auth/network-request-failed": "Network error. Please check your connection.",
+    };
+    return errorMessages[errorCode] || "An unknown error occurred.";
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Left Section */}
@@ -18,7 +80,8 @@ const Page = () => {
 
       {/* Right Section */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10">
-        <form className="w-full max-w-md">
+        <Toaster toastOptions={{ duration: 4000 }} />
+        <form onSubmit={handleSignup} className="w-full max-w-md">
           <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
 
           {/* Full Name */}
@@ -33,23 +96,27 @@ const Page = () => {
               type="text"
               id="fullName"
               placeholder="Enter your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Phone Number */}
+          {/* Email */}
           <div className="mb-4">
             <label
-              htmlFor="phone"
+              htmlFor="email"
               className="block text-gray-700 font-medium mb-2"
             >
-              Phone Number
+              Email
             </label>
             <input
-              type="text"
-              id="phone"
-              placeholder="Enter your phone number"
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -67,6 +134,8 @@ const Page = () => {
               type="password"
               id="password"
               placeholder="Create a password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -84,6 +153,8 @@ const Page = () => {
               type="password"
               id="confirmPassword"
               placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -101,19 +172,17 @@ const Page = () => {
               htmlFor="terms"
               className="ml-2 text-sm text-gray-700"
             >
-              I agree to the{" "}
-              <a href="/terms" className="text-blue-600 hover:underline">
-                Terms and Conditions
-              </a>
+              I agree to the Terms and Conditions
             </label>
           </div>
 
           {/* Signup Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-[#32a852] text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition duration-200"
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
           {/* Alternate Login Option */}
