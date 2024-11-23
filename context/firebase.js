@@ -51,10 +51,10 @@ export const FirebaseProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data(),
             }));
-            console.log(`Data from collection ${collectionName}:`, data);
+            // console.log(`Data from collection ${collectionName}:`, data);
             return data;
         } catch (error) {
-            console.error(`Error fetching data from collection ${collectionName}:`, error);
+            // console.error(`Error fetching data from collection ${collectionName}:`, error);
             throw error;
         }
     };

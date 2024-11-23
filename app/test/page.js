@@ -1,81 +1,49 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useFirebase } from "../../context/firebase";  // Assuming you have a custom Firebase context
+import { useFirebase } from "../../context/firebase";
 
 const Page = () => {
-  const firebase = useFirebase();  // Accessing Firebase from context
+  const firebase = useFirebase();
   const [patients, setPatients] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [districts, setDistricts] = useState([]);
 
   useEffect(() => {
     // Fetch data for patients
-    const fetchData = async () => {
-      try {
-        const patientsSnapshot = await firebase.listOfPatients();
-        const patientsData = patientsSnapshot.docs.map((doc) => doc.data());
+    firebase
+      .listOfPatients()
+      .then(async (patientsSnapshot) => {
+        // Check what data we are getting from Firebase
+        console.log("Data from Firebase:", patientsSnapshot);
+        const patientsData = patientsSnapshot;
+        console.log("Patients Data after mapping:", patientsData);
         setPatients(patientsData);
-        console.log("Patients data:", patientsData);
-      } catch (error) {
-        console.error("Error fetching patients data:", error);
-      }
+      })
+      .catch((error) => {
+        console.error("Error fetching patients:", error);
+      });
+  }, [firebase]);
 
-      // Fetch data for hospitals
-      try {
-        const hospitalsSnapshot = await firebase.listOfHospitals();
-        const hospitalsData = hospitalsSnapshot.docs.map((doc) => doc.data());
-        setHospitals(hospitalsData);
-        console.log("Hospitals data:", hospitalsData);
-      } catch (error) {
-        console.error("Error fetching hospitals data:", error);
-      }
+  console.log(patients);
+  // Log patients data whenever it changes
 
-      // Fetch data for districts
-      try {
-        const districtsSnapshot = await firebase.listOfDistricts();
-        const districtsData = districtsSnapshot.docs.map((doc) => doc.data());
-        setDistricts(districtsData);
-        console.log("Districts data:", districtsData);
-      } catch (error) {
-        console.error("Error fetching districts data:", error);
-      }
-    };
-
-    fetchData();
-  }, [firebase]);  // Only re-run if firebase context changes
-
-
-  console.log(patients)
   return (
     <div>
-      <h1>Data Dashboard</h1>
+      <h1>Page</h1>
 
-      <h2>Patients List</h2>
-      <ul>
-        {patients.map((patient) => (
-          <li key={patient.id}>
-            <strong>{patient.PName}</strong> (ID: {patient.id})
-          </li>
-        ))}
-      </ul>
-
-      <h2>Hospitals List</h2>
-      <ul>
-        {hospitals.map((hospital) => (
-          <li key={hospital.id}>
-            <strong>{hospital.name}</strong> (ID: {hospital.id})
-          </li>
-        ))}
-      </ul>
-
-      <h2>Districts List</h2>
-      <ul>
-        {districts.map((district) => (
-          <li key={district.id}>
-            <strong>{district.name}</strong> (ID: {district.id})
-          </li>
-        ))}
-      </ul>
+      {/* Display Patients */}
+      <div>
+        <h2>Patients</h2>
+        {patients.length > 0 ? (
+          patients.map((patient, index) => (
+            <main key={index}>
+              <h1>{patient.PName}</h1>
+            </main>
+          ))
+        ) : (
+          <p>No patients found</p>
+        )}
+      </div>
     </div>
   );
 };
