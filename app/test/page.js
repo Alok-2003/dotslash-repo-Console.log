@@ -10,14 +10,25 @@ const Page = () => {
 
   useEffect(() => {
     // Fetch data for patients
-    firebase
-      .listOfPatients()
-      .then(async (patientsSnapshot) => {
-        // Check what data we are getting from Firebase
-        console.log("Data from Firebase:", patientsSnapshot);
+    firebase.listOfPatients().then(async (patientsSnapshot) => {
         const patientsData = patientsSnapshot;
-        console.log("Patients Data after mapping:", patientsData);
         setPatients(patientsData);
+      })
+      .catch((error) => {
+        console.error("Error fetching patients:", error);
+      });
+
+    firebase.listOfHospitals().then(async (hospitalSnapshot) => {
+        const hospitalData = hospitalSnapshot;
+        setHospitals(hospitalData);
+      })
+      .catch((error) => {
+        console.error("Error fetching patients:", error);
+      });
+
+      firebase.listOfHospitals().then(async (districtSnapshot) => {
+        const districtData = districtSnapshot;
+        setDistricts(districtData);
       })
       .catch((error) => {
         console.error("Error fetching patients:", error);
@@ -25,6 +36,8 @@ const Page = () => {
   }, [firebase]);
 
   console.log(patients);
+  console.log(hospitals);
+  console.log(districts);
   // Log patients data whenever it changes
 
   return (

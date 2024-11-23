@@ -15,14 +15,15 @@ const Page = () => {
   const [patients, setPatients] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [districts, setDistricts] = useState([]);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); // Initialize userouter
 
   useEffect(() => {
     // Fetch data for patients
     firebase
       .listOfPatients()
-      .then((patientsSnapshot) => {
-        setPatients(patientsSnapshot);
+      .then(async (patientsSnapshot) => {
+        const patientsData = patientsSnapshot;
+        setPatients(patientsData);
       })
       .catch((error) => {
         console.error("Error fetching patients:", error);
@@ -30,8 +31,9 @@ const Page = () => {
 
     firebase
       .listOfHospitals()
-      .then((hospitalSnapshot) => {
-        setHospitals(hospitalSnapshot);
+      .then(async (hospitalSnapshot) => {
+        const hospitalData = hospitalSnapshot;
+        setHospitals(hospitalData);
       })
       .catch((error) => {
         console.error("Error fetching hospitals:", error);
@@ -39,8 +41,9 @@ const Page = () => {
 
     firebase
       .listOfDistricts()
-      .then((districtSnapshot) => {
-        setDistricts(districtSnapshot);
+      .then(async (districtSnapshot) => {
+        const districtData = districtSnapshot;
+        setDistricts(districtData);
       })
       .catch((error) => {
         console.error("Error fetching districts:", error);
@@ -57,7 +60,6 @@ const Page = () => {
         email,
         password
       );
-
       console.log("User logged in:", userCredential.user);
 
       // Check email against fetched data

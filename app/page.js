@@ -7,7 +7,7 @@ function Page() {
   return (
     <div className="font-sans bg-white">
       {/* Navbar */}
-      <nav className="bg-white-800 text-emerald-900 py-4 flex justify-between items-center px-6">
+      <nav className="bg-white-800 text-emerald-900 py-4 flex justify-between items-center px-16">
         <div className="flex items-center space-x-6">
           {/* Logo/Image */}
           <img src="logo.png" alt="Logo" className="h-8 lg:h-16" />
@@ -22,7 +22,7 @@ function Page() {
             <span>Profile</span>
           </a>
           {/* Login Button */}
-          <a href="#" className="flex items-center space-x-2">
+          <a href="login" className="flex items-center space-x-2">
             <FaSignInAlt className="text-xl" />
             <span>Login</span>
           </a>
@@ -30,13 +30,13 @@ function Page() {
       </nav>
 
       {/* Header Section */}
-      <header className="bg-gray-100 py-10 flex flex-col lg:flex-row items-center">
+      <header className="bg-gray-100 py-10 px-4 flex flex-col lg:flex-row items-center">
         {/* Left Section */}
         <div className="lg:w-1/2 px-4 sm:px-8 lg:px-16">
-          <h1 className="text-4xl font-bold text-gray-800 text-left">
-            HealthSync - Simplifying Health Data for Smarter Care
+          <h1 className="text-4xl font-medium text-gray-800 text-left">
+             <span className="font-bold text-teal-600 text-5xl" >HealthSync</span>  - Simplifying Health Data for Smarter Care
           </h1>
-          <p className="text-gray-600 mt-4 text-lg text-left">
+          <p className="text-slate-800 mt-4 text-xl text-left ">
             HealthSync transforms healthcare by bridging individuals, medical
             institutions, and governing bodies on a unified platform designed
             to simplify health data management. By fostering seamless
@@ -52,7 +52,7 @@ function Page() {
           <img
             src="Hero.png"  // Correct path for public folder
             alt="HealthSync Illustration"
-            className="max-w-full h-auto lg:w-2/4"
+            className="max-w-full h-auto lg:w-3/4"
           />
         </div>
       </header>
@@ -60,7 +60,7 @@ function Page() {
       {/* Why HealthSync Section */}
       <section className="py-10">
         <h2 className="text-center text-3xl font-semibold text-gray-800 mb-8">Why HealthSync?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-8 lg:px-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 px-4 sm:px-8 lg:px-16">
           {[
             {
               icon: <FaShieldAlt />,
@@ -89,9 +89,9 @@ function Page() {
             },
           ].map((feature, index) => (
             <div key={index} className="border rounded-lg p-6 bg-white shadow-lg text-center">
-              <div className="text-green-500 text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold text-gray-700 mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <div className="text-green-500 flex justify-center text-4xl mb-4">{feature.icon}</div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-2">{feature.title}</h3>
+              <p className="text-slate-800">{feature.description}</p>
             </div>
           ))}
         </div>
