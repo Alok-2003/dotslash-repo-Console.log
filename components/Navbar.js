@@ -8,12 +8,12 @@ import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { isLoggedIn, user } = useFirebase();
+  const UEmail = user?.email;
   const router = useRouter();
   const firebase = useFirebase();
   const [patients, setPatients] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [districts, setDistricts] = useState([]);
-  const UEmail = user?.email;
 
   // Helper function to determine the Dashboard URL
   const getDashboardUrl = () => {

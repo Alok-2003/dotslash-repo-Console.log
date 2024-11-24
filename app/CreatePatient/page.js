@@ -6,6 +6,7 @@ const Page = () => {
   const { addPatient } = useFirebase();
   const [formData, setFormData] = useState({
     name: "",
+    PEmail: "",
     age: "",
     gender: "",
     bloodGroup: "",
@@ -35,6 +36,7 @@ const Page = () => {
         setFormData({
           name: "",
           age: "",
+          PEmail: "",
           gender: "",
           bloodGroup: "",
           primaryContact: "",
@@ -83,6 +85,10 @@ const Page = () => {
               className="border border-gray-300 rounded p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
+        </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3  gap-4" >
+            
           <div>
             <label className="font-semibold block mb-1">Gender:</label>
             <select
@@ -96,6 +102,17 @@ const Page = () => {
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
+          </div>
+          <div>
+            <label className="font-semibold block mb-1">Patient Email:</label>
+            <input
+              type="text"
+              name="PEmail"
+              placeholder="Enter email"
+              value={formData.PEmail}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 py-1.5 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
           </div>
           <div>
             <label className="font-semibold block mb-1">Blood Group:</label>
@@ -116,7 +133,8 @@ const Page = () => {
               <option value="O-">O-</option>
             </select>
           </div>
-        </div>
+          </div>
+
 
         {/* Contact Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -132,7 +150,9 @@ const Page = () => {
             />
           </div>
           <div>
-            <label className="font-semibold block mb-1">Alternate Contact:</label>
+            <label className="font-semibold block mb-1">
+              Alternate Contact:
+            </label>
             <input
               type="text"
               name="alternateContact"
@@ -147,7 +167,9 @@ const Page = () => {
         {/* Emergency Contact */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="font-semibold block mb-1">Emergency Contact Name:</label>
+            <label className="font-semibold block mb-1">
+              Emergency Contact Name:
+            </label>
             <input
               type="text"
               name="emergencyContactName"
@@ -197,7 +219,9 @@ const Page = () => {
         {/* Insurance Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="font-semibold block mb-1">Insurance Provider:</label>
+            <label className="font-semibold block mb-1">
+              Insurance Provider:
+            </label>
             <input
               type="text"
               name="insuranceProvider"

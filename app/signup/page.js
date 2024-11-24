@@ -145,7 +145,7 @@ const Page = () => {
               required
             />
             <div
-              className="absolute top-10 right-3 cursor-pointer"
+              className="absolute top-10 right-3 cursor-pointer text-gray-500 hover:text-gray-700"
               onClick={() => setPasswordVisible(!passwordVisible)}
             >
               {passwordVisible ? <AiFillEyeInvisible size={24} /> : <AiFillEye size={24} />}
@@ -170,7 +170,7 @@ const Page = () => {
               required
             />
             <div
-              className="absolute top-10 right-3 cursor-pointer"
+              className="absolute top-10 right-3 cursor-pointer text-gray-500 hover:text-gray-700"
               onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
             >
               {confirmPasswordVisible ? <AiFillEyeInvisible size={24} /> : <AiFillEye size={24} />}
