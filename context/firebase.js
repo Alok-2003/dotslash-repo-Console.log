@@ -6,7 +6,7 @@ import {
     onAuthStateChanged,
     GoogleAuthProvider,
 } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const FirebaseContext = createContext(null);
@@ -41,6 +41,7 @@ export const FirebaseProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    console.log(user)
     const isLoggedIn = !!user;
 
     // Function to fetch and log data from a given collection
@@ -64,6 +65,28 @@ export const FirebaseProvider = ({ children }) => {
     const listOfHospitals = () => fetchAndLogCollection("Hospitals");
     const listOfDistricts = () => fetchAndLogCollection("Districts");
 
+    const addPatient = async (patientData) => {
+        try {
+            const docRef = await addDoc(collection(firestore, "Patients"), patientData);
+            console.log("Patient added with ID:", docRef.id);
+            return { success: true, id: docRef.id };
+        } catch (error) {
+            console.error("Error adding patient:", error);
+            return { success: false, error: error.message };
+        }
+    };
+
+    const createHospital = async (hospitalData) => {
+        try {
+          const docRef = await addDoc(collection(firestore, "Hospitals"), hospitalData);
+          console.log("Hospital added with ID:", docRef.id);
+          return docRef.id; // Return the document ID for reference
+        } catch (error) {
+          console.error("Error adding hospital:", error);
+          throw error; // Propagate the error for handling in the calling code
+        }
+      };
+
     return (
         <FirebaseContext.Provider
             value={{
@@ -72,6 +95,8 @@ export const FirebaseProvider = ({ children }) => {
                 listOfPatients,
                 listOfHospitals,
                 listOfDistricts,
+                addPatient,
+                createHospital
             }}
         >
             {children}

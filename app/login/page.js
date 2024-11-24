@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import { auth } from "../../context/firebase"; // Ensure your Firebase config is properly imported
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -6,19 +6,20 @@ import { toast, Toaster } from "react-hot-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useFirebase } from "../../context/firebase";
 import { useRouter } from "next/navigation";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Import icons for visibility toggle
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // New state for password visibility
   const firebase = useFirebase();
   const [patients, setPatients] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [districts, setDistricts] = useState([]);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   useEffect(() => {
-    // Fetch data for patients
     firebase
       .listOfPatients()
       .then((patientsSnapshot) => {
@@ -60,16 +61,15 @@ const Page = () => {
 
       console.log("User logged in:", userCredential.user);
 
-      // Check email against fetched data
       if (patients.some((patient) => patient.PEmail === email)) {
         toast.success("Redirecting to Patient Dashboard...");
-        router.push("/PatientDashboard"); // Replace with your route
+        router.push("/PatientDashboard");
       } else if (hospitals.some((hospital) => hospital.HEmail === email)) {
         toast.success("Redirecting to Hospital Dashboard...");
-        router.push("/HospitalDashboard"); // Replace with your route
+        router.push("/HospitalDashboard");
       } else if (districts.some((district) => district.DEmail === email)) {
         toast.success("Redirecting to District Dashboard...");
-        router.push("/DistrictDashboard"); // Replace with your route
+        router.push("/DistrictDashboard");
       } else {
         toast.error("Email not associated with any dashboard.");
       }
@@ -83,7 +83,6 @@ const Page = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Left Section */}
       <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-emerald-700 text-white p-10">
         <h1 className="text-6xl font-bold mb-8">Welcome Back!</h1>
         <DotLottieReact
@@ -94,7 +93,6 @@ const Page = () => {
         />
       </div>
 
-      {/* Right Section */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10">
         <Toaster toastOptions={{ duration: 4000 }} />
         <form onSubmit={handleLogin} className="w-full max-w-md">
@@ -118,7 +116,7 @@ const Page = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label
               htmlFor="password"
               className="block text-gray-700 font-medium mb-2"
@@ -126,7 +124,7 @@ const Page = () => {
               Password
             </label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"} // Conditional input type
               id="password"
               placeholder="Enter your password"
               value={password}
@@ -134,18 +132,23 @@ const Page = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            <button
+              type="button"
+              onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility
+              className="absolute right-3 top-10 text-gray-500 hover:text-gray-700"
+            >
+              {passwordVisible ? <AiFillEyeInvisible size={24} /> : <AiFillEye size={24} />}
+            </button>
           </div>
 
-          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+            className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-200"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          {/* Alternate Login Options */}
           <div className="text-center mt-4">
             <p className="text-gray-500">
               Don’t have an account?{" "}

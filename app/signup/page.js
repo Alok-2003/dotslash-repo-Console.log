@@ -5,19 +5,24 @@ import { auth } from "../../context/firebase"; // Ensure this path is correct
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { toast, Toaster } from "react-hot-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Import icons for password toggle
 
 const Page = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter(); // Initialize router
+
   useEffect(() => {
     setIsMounted(true); // Set mounted to true on client
   }, []);
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -123,7 +128,7 @@ const Page = () => {
           </div>
 
           {/* Password */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label
               htmlFor="password"
               className="block text-gray-700 font-medium mb-2"
@@ -131,7 +136,7 @@ const Page = () => {
               Password
             </label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               placeholder="Create a password"
               value={password}
@@ -139,10 +144,16 @@ const Page = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            <div
+              className="absolute top-10 right-3 cursor-pointer"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? <AiFillEyeInvisible size={24} /> : <AiFillEye size={24} />}
+            </div>
           </div>
 
           {/* Confirm Password */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label
               htmlFor="confirmPassword"
               className="block text-gray-700 font-medium mb-2"
@@ -150,7 +161,7 @@ const Page = () => {
               Confirm Password
             </label>
             <input
-              type="password"
+              type={confirmPasswordVisible ? "text" : "password"}
               id="confirmPassword"
               placeholder="Confirm your password"
               value={confirmPassword}
@@ -158,6 +169,12 @@ const Page = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            <div
+              className="absolute top-10 right-3 cursor-pointer"
+              onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+            >
+              {confirmPasswordVisible ? <AiFillEyeInvisible size={24} /> : <AiFillEye size={24} />}
+            </div>
           </div>
 
           {/* Terms and Conditions */}
