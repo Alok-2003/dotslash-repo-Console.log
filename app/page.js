@@ -39,9 +39,9 @@ function Page() {
         {/* Right Section */}
         <div className="lg:w-1/2 flex justify-center mt-6 lg:mt-0">
           <img
-            src="Hero.png" // Correct path for public folder
+            src="EHRbg.png" // Correct path for public folder
             alt="HealthSync Illustration"
-            className="max-w-full h-auto lg:w-3/4"
+            className=" h-auto rounded-3xl lg:w-[85%]"
           />
         </div>
       </header>

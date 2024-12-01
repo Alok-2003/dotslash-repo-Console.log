@@ -2,15 +2,15 @@
 
 import HospitalData from "@/components/HospitalData";
 import HospitalDropdown from "@/components/HospitalDropdown";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import Navbar from "@/components/Navbar";
-import { useFirebase } from "../../context/firebase";
 
 const hospitals = [
   {
     id: 1,
     name: "Max Super Specialty Hospital",
+    facilities:20,
     generalDetails: [
       { Active_Patients: 19 },
       { Closed_Patients: 25 },
@@ -31,29 +31,13 @@ const hospitals = [
 
 export default function Page() {
   const [selectedHospital, setSelectedHospital] = useState(null);
-  const [hospitals, setHospitals] = useState(null);
-  const firebase= useFirebase();
   const router = useRouter(); // Initialize the router
-  
 
   const handleAddHospital = () => {
     router.push("/CreateHospital"); // Redirect to the CreateHospital page
   };
 
-  useEffect(() => {
-    firebase
-      .listOfHospitals()
-      .then((hospitalSnapshot) => {
-        setHospitals(hospitalSnapshot);
-      })
-      .catch((error) => {
-        console.error("Error fetching hospitals:", error);
-      });
   
-    
-  }, [firebase]);
-
-  console.log(hospitals)
 
   return (
     <main className="min-h-screen bg-gray-100 ">
@@ -73,7 +57,17 @@ export default function Page() {
             </span>
           </button>
         </div>
-        
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <HospitalDropdown
+            hospitals={hospitals}
+            onSelect={(hospital) => setSelectedHospital(hospital)}
+          />
+        </div>
+        {selectedHospital && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <HospitalData hospital={selectedHospital} />
+          </div>
+        )}
       </div>
     </main>
   );

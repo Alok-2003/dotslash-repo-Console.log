@@ -71,9 +71,11 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white-800 text-emerald-900 py-4 flex justify-between items-center px-16">
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-2">
         {/* Logo/Image */}
-        <img src="logo.png" alt="Logo" className="h-8 lg:h-16" />
+        <img src="HS.png" alt="Logo" className="h-8 lg:h-12" />
+        <h1 className=" text-2xl font-bold " >Health Sync</h1>
+        
       </div>
       <div className="flex items-center space-x-6">
         <a href="/" className="text-lg flex gap-2 items-center">
